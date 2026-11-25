@@ -23,7 +23,8 @@ import sys
 
 
 def validate_line(line: str) -> None:
-    """Gate: the entry must be one non-blank line of 1-200 characters.
+    """Gate: the entry must be one non-blank line of 1-200 characters,
+    and one sentence: exactly one sentence-ending mark, at the end.
 
     Fails loudly (non-zero exit) so a bad line never ships silently.
     """
@@ -36,6 +37,10 @@ def validate_line(line: str) -> None:
     if len(line) > 200:
         print(f"ERROR: entry is {len(line)} chars, over the 200-char limit",
               file=sys.stderr)
+        sys.exit(1)
+    enders = sum(line.count(c) for c in ".!?")
+    if enders != 1 or line[-1] not in ".!?":
+        print("ERROR: entry must be exactly one sentence", file=sys.stderr)
         sys.exit(1)
 
 
